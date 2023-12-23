@@ -8,10 +8,10 @@ import java.util.ArrayList;
 
 import config.DatabaseConnnect;
 import model.Article;
-import model.ArticleInterface;
+import model.I_Article;
 import model.Client;
 
-public class ArticleDAO implements ArticleInterface{
+public class ArticleDAO implements I_Article{
     Connection con = DatabaseConnnect.getInstance().getConnection();
     PreparedStatement statement = null;
     ResultSet st=null;

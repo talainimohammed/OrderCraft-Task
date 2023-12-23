@@ -14,10 +14,10 @@ import org.json.JSONObject;
 import config.DatabaseConnnect;
 import model.Article;
 import model.Commande;
-import model.CommandeInterface;
+import model.I_Commande;
 import model.Etat;
 
-public class CommandeDAO implements CommandeInterface{
+public class CommandeDAO implements I_Commande{
 
     PreparedStatement statement = null;
     ResultSet st=null;

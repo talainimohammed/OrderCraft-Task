@@ -11,10 +11,10 @@ import org.apache.taglibs.standard.tag.common.core.CatchTag;
 
 import config.DatabaseConnnect;
 import model.Client;
-import model.ClientInterface;
+import model.I_Client;
 import model.Commande;
 
-public class ClientDAO implements ClientInterface{
+public class ClientDAO implements I_Client{
 	
     Connection con = DatabaseConnnect.getInstance().getConnection();
     PreparedStatement statement = null;

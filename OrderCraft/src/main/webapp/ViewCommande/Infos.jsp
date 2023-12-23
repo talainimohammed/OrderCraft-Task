@@ -96,7 +96,7 @@
             </table>
 
             <div>
-                <p><strong>Total: <%=somme %></strong></p>
+                <p><strong>Total Commande : <%=somme %></strong></p>
             </div>
         </div>
     </div>

@@ -2,7 +2,7 @@ package model;
 
 import java.util.ArrayList;
 
-public interface CommandeInterface {
+public interface I_Commande {
 	
 	public Commande ajouterCommande(Commande c,String listart);
 	public Commande afficherCommandeAvecId(int id);

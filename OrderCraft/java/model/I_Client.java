@@ -2,7 +2,7 @@ package model;
 
 import java.util.ArrayList;
 
-public interface ClientInterface {
+public interface I_Client {
 	
 	public Client ajouterClient(Client c);
 	public Client modifierClient(Client c);
