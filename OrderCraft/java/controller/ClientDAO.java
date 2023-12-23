@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
 import org.apache.taglibs.standard.tag.common.core.CatchTag;
 
 import config.DatabaseConnnect;
@@ -21,12 +22,14 @@ public class ClientDAO implements I_Client{
     ResultSet st=null;
 	Client cl=null;
 	SqlOperations sqloperation=new SqlOperations();
+    static Logger log = Logger.getLogger(CommandeDAO.class.getName());  
 
 	@Override
 	public Client ajouterClient(Client c) {
 		 // Ajouter Client
 		String insertQuery = "INSERT INTO client(nom, prenom, tel, adresse) VALUES ('"+c.getNom()+"', '"+c.getPrenom()+"', '"+c.getTel()+"', '"+c.getAdresse()+"')";
 		int idClient =  sqloperation.ajouterSql(insertQuery,"ADD");
+		log.debug("Client ajouter");
 		return this.afficherClientsAvecId(idClient);
 	}
 	
@@ -36,6 +39,8 @@ public class ClientDAO implements I_Client{
 		   String insertQuery = "UPDATE client set nom='"+c.getNom()+"', prenom='"+c.getPrenom()+"', tel='"+c.getTel()+"', adresse='"+c.getAdresse()+"' WHERE id_client="+c.getId_client()+"";
 		   int check= sqloperation.ajouterSql(insertQuery,null);
 		   if(check>0) {
+				log.debug("Client Modifier");
+
 			   return this.afficherClientsAvecId(c.getId_client());
 		   }
 		return null;
@@ -52,6 +57,8 @@ public class ClientDAO implements I_Client{
 			while (st.next()) {
 				cl=new Client.ClientBuilder().setId_client(st.getInt(1)).setNom(st.getString(2)).setPrenom(st.getString(3)).setTel(st.getString(4)).setAdresse(st.getString(5)).build();
 			}
+			log.debug("Client afficher avec id"+id);
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -70,6 +77,8 @@ public class ClientDAO implements I_Client{
 				cl=new Client.ClientBuilder().setId_client(st.getInt(1)).setNom(st.getString(2)).setPrenom(st.getString(3)).setTel(st.getString(4)).setAdresse(st.getString(5)).build();
 				clientsList.add(cl);
 			}
+			log.debug("afficher list Clients");
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -96,6 +105,7 @@ public class ClientDAO implements I_Client{
         String query = "DELETE FROM client WHERE id_client = "+id;
 		int check= sqloperation.ajouterSql(query,null);
 	   if(check>0) {
+			log.debug("Client supprimer");
 		   return true;
 	   }
 		return false;
