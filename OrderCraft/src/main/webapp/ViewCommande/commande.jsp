@@ -56,6 +56,8 @@
              </table>
              <table class="table" id="articlechoisie">
              </table>
+             <table class="table" id="total">
+             </table>
             </div>
         </section>
     </div>
@@ -128,6 +130,7 @@ $('#addarticle').click( function() {
 	listart.push(articlejson);
 	//console.log(JSON.stringify(listart));
 $("#articlechoisie tr").remove();
+var s=0;
 	$.each(listart, function(index, articlejson) {
 	   var row = "<tr>" +
 	       "<td>" + articlejson["libelle"] + "</td>" +
@@ -136,7 +139,12 @@ $("#articlechoisie tr").remove();
 	       "<td>" + (articlejson["prix"] * articlejson["qty"]) + "</td>" +
 	       "</tr>";
 	   $("#articlechoisie").append(row);
+	   s+=(articlejson["prix"] * articlejson["qty"]);
 	});
+	$("#total").empty();
+	var row1="<tr><td></td><td></td><td>Total Commande</td><td>"+s+"</td></tr>";
+	$("#total").append(row1);
+		
 	$('#listart').val(JSON.stringify(listart));
 	console.log(document.getElementById('listart').value);
 	});
