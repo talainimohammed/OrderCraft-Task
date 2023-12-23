@@ -43,6 +43,8 @@ public class ClientDAO implements I_Client{
 	
 	@Override
 	public Client afficherClientsAvecId(int id){
+		//Afficher Les information de client par id client
+
 		 try {
 			String qry="select * from client where id_client="+id;
 			st=sqloperation.getSql(qry);
@@ -59,6 +61,7 @@ public class ClientDAO implements I_Client{
 	
 	@Override
 	public ArrayList<Client> afficherClients(){
+		//Afficher tous les clients
 		ArrayList<Client> clientsList=new ArrayList<>();
 		 try {
 			String qry="select * from client";
@@ -76,6 +79,7 @@ public class ClientDAO implements I_Client{
 	
 	@Override
 	public boolean supprimeClient(int id) {
+		//Supprimer le client et ses commandes
 		Commande cmd=null;
 		CommandeDAO cmddao=new CommandeDAO();
 		String qry="select id_commande from commande where id_client="+id;

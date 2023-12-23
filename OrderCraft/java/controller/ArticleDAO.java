@@ -36,6 +36,7 @@ public class ArticleDAO implements I_Article{
 	
 	@Override
 	public Article afficherArticleAvecId(int id){
+		//Afficher Les Article Par id article
 		 try {
 			String qry="select * from article where id_article="+id;
 			st=sqloperation.getSql(qry);
@@ -52,6 +53,8 @@ public class ArticleDAO implements I_Article{
 	
 	@Override
 	public ArrayList<Article> afficherArticles(){
+		//Afficher tous Les Articles
+
 		ArrayList<Article> articlesList=new ArrayList<>();
 		 try {
 			 String qry="select * from article";
@@ -70,6 +73,7 @@ public class ArticleDAO implements I_Article{
 	
 	@Override
 	public boolean supprimeArticle(int id) {
+			//Supprimer Article
         	String query = "DELETE FROM article WHERE id_article = "+id;
     		int check= sqloperation.ajouterSql(query,null);
         	if(check>0) {

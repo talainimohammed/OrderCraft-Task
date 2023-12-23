@@ -29,6 +29,7 @@ public class CommandeDAO implements I_Commande{
     
     @Override
 	public Commande ajouterCommande(Commande c,String listart) {
+    	//Ajouter Une Commande
 		 try {
 	            date.format(formatter);
                 // Ajouter Commande
@@ -52,6 +53,7 @@ public class CommandeDAO implements I_Commande{
 	}
 	@Override
 	public Commande afficherCommandeAvecId(int id){
+		//Afficher une commande avec id commande
 		 try {
 				String qry="select * from commande where id_commande="+id;
 				st=sqloperation.getSql(qry);
@@ -66,6 +68,7 @@ public class CommandeDAO implements I_Commande{
 	}
 	@Override
 	public ArrayList<Commande> afficherCommandes(){
+		//afficher tous les commandes
 		ArrayList<Commande> commandesList=new ArrayList<>();
 		 try {
 			 	String qry="select * from commande";
@@ -84,6 +87,7 @@ public class CommandeDAO implements I_Commande{
 	
 	@Override
 	public ArrayList<String> afficherInfosCommande(int id){
+		//afficher les informations des commandes
 		ArrayList<String> commandesList=new ArrayList<>();
 		 try {
 			 String qry="SELECT commande.id_commande,commande.id_client,commande_article.id_article,commande_article.qty FROM `commande`,commande_article WHERE commande.id_commande=commande_article.id_commande and commande.id_commande="+id;
@@ -102,6 +106,7 @@ public class CommandeDAO implements I_Commande{
 		
 	@Override
 	public Commande modifieretat(int id,String etat) {
+		//modifier l'etat de la commande
 		 // Modifier Etat
 		Commande cmd=this.afficherCommandeAvecId(id);
 		ArticleDAO artdao =new ArticleDAO();
