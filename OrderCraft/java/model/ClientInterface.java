@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 public interface ClientInterface {
 	
-	boolean ajouterClient(Client c);
-	boolean modifierClient(Client c);
-	Client afficherClientsAvecId(int id);
-	ArrayList<Client> afficherClients();
-	boolean supprimeClient(int id);
+	public Client ajouterClient(Client c);
+	public Client modifierClient(Client c);
+	public Client afficherClientsAvecId(int id);
+	public ArrayList<Client> afficherClients();
+	public boolean supprimeClient(int id);
 
 }

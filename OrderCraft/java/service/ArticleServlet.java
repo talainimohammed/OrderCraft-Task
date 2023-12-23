@@ -73,8 +73,8 @@ public class ArticleServlet extends jakarta.servlet.http.HttpServlet {
 		PrintWriter out =response.getWriter();
 		if(op != null) {
 			if(op.equals("ajouter")) {
-				Article cl=new Article(libelle,categorie,Double.parseDouble(prix),Integer.parseInt(stock));
-				if(artmanage.ajouterArticle(cl)) {
+				Article ar=new Article.ArticleBuilder().setLibelle(libelle).setCategorie(categorie).setPrix(Double.parseDouble(prix)).setStock(Integer.parseInt(stock)).build();
+				if(artmanage.ajouterArticle(ar)!=null) {
 					response.sendRedirect(request.getContextPath() + "/ArticleServlet");
 				}else {
 					out.println("Ajout client pas reussi");
@@ -82,8 +82,8 @@ public class ArticleServlet extends jakarta.servlet.http.HttpServlet {
 				}
 			}else if(op.equals("modifier")) {
 				String id=request.getParameter("id");
-				Article cl=new Article(Integer.parseInt(id),libelle,categorie,Double.parseDouble(prix),Integer.parseInt(stock));
-				if(artmanage.modifierArticle(cl)) {
+				Article ar=new Article.ArticleBuilder().setId_article(Integer.parseInt(id)).setLibelle(libelle).setCategorie(categorie).setPrix(Double.parseDouble(prix)).setStock(Integer.parseInt(stock)).build();
+				if(artmanage.modifierArticle(ar)!=null) {
 					response.sendRedirect(request.getContextPath() + "/ArticleServlet");
 				}else {
 					out.println("Modification client pas reussi");

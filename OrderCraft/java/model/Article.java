@@ -9,61 +9,77 @@ public class Article {
 	private int stock;
 	
 	
-	public Article(String libelle, String categorie,double prix, int stock) {
-		super();
-		this.libelle = libelle;
-		this.categorie = categorie;
-		this.prix=prix;
-		this.stock = stock;
+	public Article(ArticleBuilder builder) {
+		this.id_article=builder.id_article;
+		this.libelle = builder.libelle;
+		this.categorie = builder.categorie;
+		this.prix=builder.prix;
+		this.stock = builder.stock;
 	}
 	
-	public Article(int id_article, String libelle, String categorie, double prix, int stock) {
-		super();
-		this.id_article = id_article;
-		this.libelle = libelle;
-		this.categorie = categorie;
-		this.prix = prix;
-		this.stock = stock;
-	}
 
 	public double getPrix() {
 		return prix;
 	}
 
-	public void setPrix(double prix) {
-		this.prix = prix;
-	}
 
 	public int getId_article() {
 		return id_article;
 	}
-	public void setId_article(int id_article) {
-		this.id_article = id_article;
-	}
+
 	public String getLibelle() {
 		return libelle;
 	}
-	public void setLibelle(String libelle) {
-		this.libelle = libelle;
-	}
+
 	public String getCategorie() {
 		return categorie;
 	}
-	public void setCategorie(String categorie) {
-		this.categorie = categorie;
-	}
+
 	public int getStock() {
 		return stock;
 	}
-	public void setStock(int stock) {
-		this.stock = stock;
-	}
+
 	@Override
 	public String toString() {
 		return "Article [id_article=" + id_article + ", libelle=" + libelle + ", categorie=" + categorie + ", stock="
 				+ stock + "]";
 	}
 	
-	
+	public static class ArticleBuilder{
+		private int id_article;
+		private String libelle;
+		private String categorie;
+		private double prix;
+		private int stock;
+		
+		public ArticleBuilder setId_article(int id_article) {
+			this.id_article = id_article;
+			return this;
+		}
+		public ArticleBuilder setLibelle(String libelle) {
+			this.libelle = libelle;
+			return this;
+
+		}
+		public ArticleBuilder setCategorie(String categorie) {
+			this.categorie = categorie;
+			return this;
+
+		}
+		public ArticleBuilder setPrix(double prix) {
+			this.prix = prix;
+			return this;
+
+		}
+		public ArticleBuilder setStock(int stock) {
+			this.stock = stock;
+			return this;
+
+		}
+		
+		public Article build() {
+			return new Article(this);
+		}
+	}
 
 }

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import org.apache.taglibs.standard.tag.common.core.CatchTag;
@@ -18,47 +19,32 @@ public class ClientDAO implements ClientInterface{
     PreparedStatement statement = null;
     ResultSet st=null;
 	Client cl=null;
-	public boolean ajouterClient(Client c) {
-		 try {
-                // Ajouter Client
-                String insertQuery = "INSERT INTO client(nom, prenom, tel, adresse) VALUES (?, ?, ?, ?)";
-                statement = con.prepareCall(insertQuery);
-                statement.setString(1, c.getNom());
-                statement.setString(2, c.getPrenom());
-                statement.setString(3, c.getTel());
-                statement.setString(4, c.getAdresse());
-                statement.execute();
-                return true;
-	                
-	        } catch (SQLException e) {
-	            throw new RuntimeException(e);
-	        }
+	SqlOperations sqloperation=new SqlOperations();
+
+	public Client ajouterClient(Client c) {
+		 // Ajouter Client
+		String insertQuery = "INSERT INTO client(nom, prenom, tel, adresse) VALUES ('"+c.getNom()+"', '"+c.getPrenom()+"', '"+c.getTel()+"', '"+c.getAdresse()+"')";
+		int idClient =  sqloperation.ajouterSql(insertQuery,"ADD");
+		return this.afficherClientsAvecId(idClient);
 	}
 	
-	public boolean modifierClient(Client c) {
-		 try {
-               // Ajouter Client
-               String insertQuery = "UPDATE client set nom=?, prenom=?, tel=?, adresse=? WHERE id_client=?";
-               statement = con.prepareCall(insertQuery);
-               statement.setString(1, c.getNom());
-               statement.setString(2, c.getPrenom());
-               statement.setString(3, c.getTel());
-               statement.setString(4, c.getAdresse());
-               statement.setInt(5, c.getId_client());
-               statement.execute();
-               return true;
-	                
-	        } catch (SQLException e) {
-	            throw new RuntimeException(e);
-	        }
+	public Client modifierClient(Client c) {
+		 // Modifier Client
+		   String insertQuery = "UPDATE client set nom='"+c.getNom()+"', prenom='"+c.getPrenom()+"', tel='"+c.getTel()+"', adresse='"+c.getAdresse()+"' WHERE id_client="+c.getId_client()+"";
+		   int check= sqloperation.ajouterSql(insertQuery,null);
+		   if(check>0) {
+			   return this.afficherClientsAvecId(c.getId_client());
+		   }
+		return null;
 	}
+	
 	public Client afficherClientsAvecId(int id){
 		 try {
-			statement = con.prepareStatement("select * from client where id_client="+id);
-			st=statement.executeQuery();
+			String qry="select * from client where id_client="+id;
+			st=sqloperation.getSql(qry);
 			
 			while (st.next()) {
-				cl=new Client(st.getInt(1),st.getString(2), st.getString(3), st.getString(4), st.getString(5));
+				cl=new Client.ClientBuilder().setId_client(st.getInt(1)).setNom(st.getString(2)).setPrenom(st.getString(3)).setTel(st.getString(4)).setAdresse(st.getString(5)).build();
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -66,14 +52,14 @@ public class ClientDAO implements ClientInterface{
 		}
 		return cl; 
 	}
+	
 	public ArrayList<Client> afficherClients(){
 		ArrayList<Client> clientsList=new ArrayList<>();
 		 try {
-			statement = con.prepareStatement("select * from client");
-			st=statement.executeQuery();
-			
+			String qry="select * from client";
+			st=sqloperation.getSql(qry);
 			while (st.next()) {
-				cl=new Client(st.getInt(1),st.getString(2), st.getString(3), st.getString(4), st.getString(5));
+				cl=new Client.ClientBuilder().setId_client(st.getInt(1)).setNom(st.getString(2)).setPrenom(st.getString(3)).setTel(st.getString(4)).setAdresse(st.getString(5)).build();
 				clientsList.add(cl);
 			}
 		} catch (SQLException e) {
@@ -84,16 +70,11 @@ public class ClientDAO implements ClientInterface{
 	}
 	public boolean supprimeClient(int id) {
 		
-        try {
-        	String query = "DELETE FROM client WHERE id_client = ?";
-    		statement = con.prepareStatement(query);
-            statement.setInt(1,id);
-			statement.execute();
-			return true;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        String query = "DELETE FROM client WHERE id_client = "+id;
+		int check= sqloperation.ajouterSql(query,null);
+	   if(check>0) {
+		   return true;
+	   }
 		return false;
 	}
 }

@@ -2,63 +2,80 @@ package model;
 
 public class Client {
 
-	private int id_client=0;
+	private int id_client;
 	private String nom;
 	private String prenom;
 	private String tel;
 	private String adresse;
 	
-	public Client() {
-	}
-	public Client(String nom, String prenom, String tel, String adresse) {
-		this.nom = nom;
-		this.prenom = prenom;
-		this.tel = tel;
-		this.adresse = adresse;
-	}
-	public Client(int id,String nom, String prenom, String tel, String adresse) {
-		this.id_client=id;
-		this.nom = nom;
-		this.prenom = prenom;
-		this.tel = tel;
-		this.adresse = adresse;
-	}
 	
+	
+	private Client(ClientBuilder clientBuilder) {
+		this.id_client=clientBuilder.id_client;
+		this.nom=clientBuilder.nom;
+		this.prenom=clientBuilder.prenom;
+		this.tel=clientBuilder.tel;
+		this.adresse=clientBuilder.adresse;
+	}
 	public int getId_client() {
 		return id_client;
 	}
-	public void setId_client(int id_client) {
-		this.id_client = id_client;
-	}
+
 	public String getNom() {
 		return nom;
 	}
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
+
 	public String getPrenom() {
 		return prenom;
 	}
-	public void setPrenom(String prenom) {
-		this.prenom = prenom;
-	}
+
 	public String getTel() {
 		return tel;
 	}
-	public void setTel(String tel) {
-		this.tel = tel;
-	}
+
 	public String getAdresse() {
 		return adresse;
 	}
-	public void setAdresse(String adresse) {
-		this.adresse = adresse;
-	}
+
 	
 	@Override
 	public String toString() {
 		return "Client [id_client=" + id_client + ", nom=" + nom + ", prenom=" + prenom + ", tel=" + tel + ", adresse="
 				+ adresse + "]";
+	}
+	
+	public  static class ClientBuilder{
+		private int id_client;
+		private String nom;
+		private String prenom;
+		private String tel;
+		private String adresse;
+		
+		public ClientBuilder setId_client(int id_client) {
+			this.id_client = id_client;
+			return this;
+		}
+		public ClientBuilder setNom(String nom) {
+			this.nom = nom;
+			return this;
+		}
+		public ClientBuilder setPrenom(String prenom) {
+			this.prenom = prenom;
+			return this;
+		}
+		public ClientBuilder setTel(String tel) {
+			this.tel = tel;
+			return this;
+		}
+		public ClientBuilder setAdresse(String adresse) {
+			this.adresse = adresse;
+			return this;
+		}
+		public Client build() {
+			return new Client(this);
+		}
+		
+		
 	}
 	
 }

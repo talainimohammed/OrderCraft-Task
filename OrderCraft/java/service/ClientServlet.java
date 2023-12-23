@@ -71,26 +71,23 @@ public class ClientServlet extends HttpServlet {
 		String prenom=request.getParameter("prenom");
 		String tel=request.getParameter("tel");
 		String adresse=request.getParameter("adresse");
+		PrintWriter out =response.getWriter();
+
 		if(op != null) {
 			if(op.equals("ajouter")) {
-				Client cl=new Client(nom,prenom,tel,adresse);
-				PrintWriter out =response.getWriter();
-
-				if(mn.ajouterClient(cl)) {
+				
+				Client cl=new Client.ClientBuilder().setNom(nom).setPrenom(prenom).setTel(tel).setAdresse(adresse).build();
+				if(mn.ajouterClient(cl)!=null) {
 					response.sendRedirect(request.getContextPath() + "/ClientServlet");
-					//out.println("Client Ajouter avec success");
 				}else {
 					out.println("Ajout client pas reussi");
 
 				}
 			}else if(op.equals("modifier")) {
 				String id=request.getParameter("id");
-				Client cl=new Client(Integer.parseInt(id),nom,prenom,tel,adresse);
-				PrintWriter out =response.getWriter();
-
-				if(mn.modifierClient(cl)) {
+				Client cl=new Client.ClientBuilder().setId_client(Integer.parseInt(id)).setNom(nom).setPrenom(prenom).setTel(tel).setAdresse(adresse).build();
+				if(mn.modifierClient(cl)!=null) {
 					response.sendRedirect(request.getContextPath() + "/ClientServlet");
-					//out.println("Client Ajouter avec success");
 				}else {
 					out.println("Modification client pas reussi");
 

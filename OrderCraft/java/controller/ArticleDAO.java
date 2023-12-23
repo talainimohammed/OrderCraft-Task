@@ -15,65 +15,45 @@ public class ArticleDAO implements ArticleInterface{
     Connection con = DatabaseConnnect.getInstance().getConnection();
     PreparedStatement statement = null;
     ResultSet st=null;
-    Article ar=null;
-    
-	public boolean ajouterArticle(Article c) {
-		 try {
-                // Ajouter Client
-                String insertQuery = "INSERT INTO article(libelle, categorie, prix, stock) VALUES (?, ?, ?, ?)";
-                statement = con.prepareCall(insertQuery);
-                statement.setString(1, c.getLibelle());
-                statement.setString(2, c.getCategorie());
-                statement.setDouble(3, c.getPrix());
-                statement.setInt(4, c.getStock());
-                statement.execute();
-                return true;
-	                
-	        } catch (SQLException e) {
-	            throw new RuntimeException(e);
-	        }
+    Article artDao=null;
+	SqlOperations sqloperation=new SqlOperations();
+
+	public Article ajouterArticle(Article c) {
+		 // Ajouter Article
+		String insertQuery = "INSERT INTO article(libelle, categorie, prix, stock) VALUES ('"+c.getLibelle()+"', '"+c.getCategorie()+"', '"+c.getPrix()+"', '"+c.getStock()+"')";     
+		int idArticle =  sqloperation.ajouterSql(insertQuery,"ADD");
+		return this.afficherArticleAvecId(idArticle);
 	}
 	
-	public boolean modifierArticle(Article c) {
-		 try {
-               // Ajouter Client
-               String insertQuery = "UPDATE article set libelle=?, categorie=?, prix=?, stock=? WHERE id_article=?";
-               statement = con.prepareCall(insertQuery);
-               statement.setString(1, c.getLibelle());
-               statement.setString(2, c.getCategorie());
-               statement.setDouble(3, c.getPrix());
-               statement.setInt(4, c.getStock());
-               statement.setInt(5, c.getId_article());
-               statement.execute();
-               return true;
-	                
-	        } catch (SQLException e) {
-	            throw new RuntimeException(e);
-	        }
+	public Article modifierArticle(Article c) {
+		 // Modifier Article
+		   String insertQuery = "UPDATE article set libelle='"+c.getLibelle()+"', categorie='"+c.getCategorie()+"', prix='"+c.getPrix()+"', stock='"+c.getStock()+"' WHERE id_article="+c.getId_article();
+		   int idArticle =  sqloperation.ajouterSql(insertQuery,null);
+		   return this.afficherArticleAvecId(c.getId_article());
 	}
 	public Article afficherArticleAvecId(int id){
 		 try {
-			statement = con.prepareStatement("select * from article where id_article="+id);
-			st=statement.executeQuery();
+			String qry="select * from article where id_article="+id;
+			st=sqloperation.getSql(qry);
 			
 			while (st.next()) {
-				ar=new Article(st.getInt(1),st.getString(2), st.getString(3), st.getDouble(4), st.getInt(5));
+				artDao=new Article.ArticleBuilder().setId_article(st.getInt(1)).setLibelle(st.getString(2)).setCategorie(st.getString(3)).setPrix(st.getDouble(4)).setStock(st.getInt(5)).build();
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return ar; 
+		return artDao; 
 	}
 	public ArrayList<Article> afficherArticles(){
 		ArrayList<Article> articlesList=new ArrayList<>();
 		 try {
-			statement = con.prepareStatement("select * from article");
-			st=statement.executeQuery();
+			 String qry="select * from article";
+			 st=sqloperation.getSql(qry);
 			
 			while (st.next()) {
-				ar=new Article(st.getInt(1),st.getString(2), st.getString(3), st.getDouble(4), st.getInt(5));
-				articlesList.add(ar);
+				artDao=new Article.ArticleBuilder().setId_article(st.getInt(1)).setLibelle(st.getString(2)).setCategorie(st.getString(3)).setPrix(st.getDouble(4)).setStock(st.getInt(5)).build();
+				articlesList.add(artDao);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -82,17 +62,11 @@ public class ArticleDAO implements ArticleInterface{
 		return articlesList; 
 	}
 	public boolean supprimeArticle(int id) {
-		
-        try {
-        	String query = "DELETE FROM article WHERE id_article = ?";
-    		statement = con.prepareStatement(query);
-            statement.setInt(1,id);
-			statement.execute();
-			return true;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return false;
+        	String query = "DELETE FROM article WHERE id_article = "+id;
+    		int check= sqloperation.ajouterSql(query,null);
+        	if(check>0) {
+     		   return true;
+     	   }
+     		return false;
 	}
 }

@@ -53,7 +53,7 @@
 			                <td><%=cl.afficherClientsAvecId(s.getId_client()).getNom()+" "+cl.afficherClientsAvecId(s.getId_client()).getPrenom()%></td> 
 			                <td><%=s.getEtat()%></td>
 			                <td><%=s.getDate_creation()%></td>  
-			                <td><a href="CommandeServlet?op=del&id=<%=s.getId_commande()%>">Supprimer</a><a href="CommandeServlet?op=mod&id=<%=s.getId_commande()%>">Modifier</a><a href="CommandeServlet?op=show&id=<%=s.getId_commande()%>">Infos</a></td>
+			                <td><a href="CommandeServlet?op=del&id=<%=s.getId_commande()%>">Supprimer</a><a href="CommandeServlet?op=show&id=<%=s.getId_commande()%>">Infos</a></td>
 			            </tr> 
 			            <%}%>
                 </table>

@@ -53,26 +53,21 @@ public class CommandeServlet extends HttpServlet {
 				RequestDispatcher rd = request.getRequestDispatcher("commande.jsp"); 
 				rd.forward(request, response);	
 			
-			}else if(op.equals("mod")) {
-				request.setAttribute("op", "mod"); 
-				request.setAttribute("data", cmdmanage.afficherCommandeAvecId(Integer.parseInt(id))); 
-				RequestDispatcher rd = request.getRequestDispatcher("commande.jsp"); 
-				rd.forward(request, response);	
 			}else if(op.equals("del")) {
 				if(cmdmanage.supprimeCommandes(Integer.parseInt(id))) {
-					request.setAttribute("datacmd", cmdmanage.afficherCommandesArticle()); 
+					request.setAttribute("datacmd", cmdmanage.afficherCommandes()); 
 					RequestDispatcher rd = request.getRequestDispatcher("list_cmd.jsp"); 
 					rd.forward(request, response);
 				}
 			}
 			else if(op.equals("etat")) {
 				if(cmdmanage.modifieretat(Integer.parseInt(id))) {
-					request.setAttribute("datacmd", cmdmanage.afficherCommandesArticle()); 
+					request.setAttribute("datacmd", cmdmanage.afficherCommandes()); 
 					RequestDispatcher rd = request.getRequestDispatcher("list_cmd.jsp"); 
 					rd.forward(request, response);
 				}
 			}else if(op.equals("show")) {
-					request.setAttribute("datacmd", cmdmanage.afficherCommandesArticleClient(Integer.parseInt(id))); 
+					request.setAttribute("datacmd", cmdmanage.afficherInfosCommande(Integer.parseInt(id))); 
 					RequestDispatcher rd = request.getRequestDispatcher("Infos.jsp"); 
 					rd.forward(request, response);
 				
@@ -121,25 +116,16 @@ public class CommandeServlet extends HttpServlet {
 		PrintWriter out =response.getWriter();
 		if(op != null) {
 			if(op.equals("addcmd")) {
-				//System.out.print(listart);
-				//System.out.print(id_client);
-				
-				Commande cl=new Commande(Integer.parseInt(id_client),etat);
-				if(cmdmanage.ajouterCommande(cl,listart)!=null) {
+
+				Commande cmd=new Commande.CommandeBuilder().setId_client(Integer.parseInt(id_client)).setEtat(etat).build();
+				if(cmdmanage.ajouterCommande(cmd,listart)!=null) {
 					response.sendRedirect(request.getContextPath() + "/CommandeServlet");
 				}else {
 					out.println("Ajout Commande pas reussi");
 
 				}
-			}else if(op.equals("modifier")) {
-				/*String id=request.getParameter("id");
-				Article cl=new Article(Integer.parseInt(id),libelle,categorie,Double.parseDouble(prix),Integer.parseInt(stock));
-				if(cmdmanage.modifierArticle(cl)) {
-					response.sendRedirect(request.getContextPath() + "/ArticleServlet");
-				}else {
-					out.println("Modification client pas reussi");
-
-				}*/
+			}else {
+			 out.print("Page N'exist pas");
 			}
 		}
 	}
