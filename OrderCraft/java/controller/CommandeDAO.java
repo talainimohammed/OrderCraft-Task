@@ -9,20 +9,16 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.google.gson.JsonParser;
-
-import model.Client;
+import config.DatabaseConnnect;
 import model.Commande;
-import model.Connectiondb;
 import model.Etat;
 
 public class CommandeDAO {
 
-	Connection con=Connectiondb.connectionBD();
     PreparedStatement statement = null;
     ResultSet st=null;
 	Commande cmd=null;
-	
+    Connection con = DatabaseConnnect.getInstance().getConnection();
 	public Commande ajouterCommande(Commande c,String listart) {
 		 try {
                 // Ajouter Commande
@@ -106,11 +102,11 @@ public class CommandeDAO {
 	public ArrayList<String> afficherCommandesArticleClient(int id){
 		ArrayList<String> commandesList=new ArrayList<>();
 		 try {
-			statement = con.prepareStatement("SELECT commande.id_commande,commande.id_client,commande_article.id_article,commande_article.qty FROM `commande`,commande_article WHERE commande.id_commande=commande_article.id_commande;");
+			statement = con.prepareStatement("SELECT commande.id_commande,commande.id_client,commande_article.id_article,commande_article.qty FROM `commande`,commande_article WHERE commande.id_commande=commande_article.id_commande and commande.id_commande="+id+" ;");
 			st=statement.executeQuery();
 			String ob=null;
 			while (st.next()) {
-			ob=st.getInt(1)+","+st.getInt(2)+","+ st.getString(3)+","+ st.getDate(4).toLocalDate();
+			ob=st.getInt(1)+","+st.getInt(2)+","+ st.getInt(3)+","+ st.getInt(4);
 			commandesList.add(ob);
 			}
 		} catch (SQLException e) {

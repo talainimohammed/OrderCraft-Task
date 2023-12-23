@@ -41,23 +41,19 @@
                 <h1>Liste des Commandes </h1>
                 <table class="table">
                   <tr>
-                    <th scope="col">Id Commande</th><th scope="col">Nom Client</th><th scope="col">Libelle Article</th><th scope="col">Quantite</th><th scope="col">Etat</th><th scope="col">Date Commande</th><th scope="col">Date Mise a Jour</th><th>Operation</th>
+                    <th scope="col">Id Commande</th><th scope="col">Nom Client</th><th scope="col">Etat</th><th scope="col">Date Commande</th><th>Operation</th>
                   </tr>
-                   <%ArrayList<String> std =  (ArrayList<String>)request.getAttribute("datacmd"); 
+                   <%ArrayList<Commande> std =  (ArrayList<Commande>)request.getAttribute("datacmd"); 
                    ClientDAO cl=new ClientDAO();
                    ArticleDAO ar=new ArticleDAO();
-			        for(String s:std){
-			        String [] line=s.split(",");
+			        for(Commande s:std){
 			        %> 
 			            <tr> 
-			                <td><%=line[0]%></td> 
-			                <td><%=cl.afficherClientsAvecId(Integer.parseInt(line[1])).getNom()%></td> 
-			                <td><%=ar.afficherArticleAvecId(Integer.parseInt(line[5])).getLibelle()%></td> 
-			                <td><%=line[6]%></td> 
-			                <td><%=line[2]%></td>
-			                <td><%=line[3]%></td> 
-			                <td><%=line[4]%></td> 
-			                <td><a href="CommandeServlet?op=del&id=<%=line[0]%>">Supprimer</a><a href="CommandeServlet?op=mod&id=<%=line[0]%>">Modifier</a><a href="CommandeServlet?op=show&id=<%=line[0]%>">Infos</a></td>
+			                <td><%=s.getId_commande()%></td> 
+			                <td><%=cl.afficherClientsAvecId(s.getId_client()).getNom()+" "+cl.afficherClientsAvecId(s.getId_client()).getPrenom()%></td> 
+			                <td><%=s.getEtat()%></td>
+			                <td><%=s.getDate_creation()%></td>  
+			                <td><a href="CommandeServlet?op=del&id=<%=s.getId_commande()%>">Supprimer</a><a href="CommandeServlet?op=mod&id=<%=s.getId_commande()%>">Modifier</a><a href="CommandeServlet?op=show&id=<%=s.getId_commande()%>">Infos</a></td>
 			            </tr> 
 			            <%}%>
                 </table>

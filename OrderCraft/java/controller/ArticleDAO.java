@@ -6,14 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import config.DatabaseConnnect;
 import model.Article;
 import model.ArticleInterface;
 import model.Client;
-import model.Connectiondb;
 
 public class ArticleDAO implements ArticleInterface{
-	Connectiondb conDB=new Connectiondb();
-	Connection con=conDB.connectionBD();
+    Connection con = DatabaseConnnect.getInstance().getConnection();
     PreparedStatement statement = null;
     ResultSet st=null;
     Article ar=null;

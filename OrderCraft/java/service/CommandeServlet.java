@@ -102,7 +102,7 @@ public class CommandeServlet extends HttpServlet {
 			
 		}else {
 			//System.out.print(cmdmanage.afficherCommandesArticle());
-			request.setAttribute("datacmd", cmdmanage.afficherCommandesArticle()); 
+			request.setAttribute("datacmd", cmdmanage.afficherCommandes()); 
 			RequestDispatcher rd = request.getRequestDispatcher("list_cmd.jsp"); 
 			rd.forward(request, response);
 		}

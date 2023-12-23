@@ -8,18 +8,13 @@ import java.util.ArrayList;
 
 import org.apache.taglibs.standard.tag.common.core.CatchTag;
 
+import config.DatabaseConnnect;
 import model.Client;
 import model.ClientInterface;
-import model.Connectiondb;
-import model.DatabaseConnnect;
 
 public class ClientDAO implements ClientInterface{
-	/*Connection con=null;
-	DatabaseConnnect databaseConnnect = DatabaseConnnect.getInstance();
-    con = databaseConnnect.getConnection();*/
-
-	Connectiondb conDB=new Connectiondb();
-	Connection con=conDB.connectionBD();
+	
+    Connection con = DatabaseConnnect.getInstance().getConnection();
     PreparedStatement statement = null;
     ResultSet st=null;
 	Client cl=null;

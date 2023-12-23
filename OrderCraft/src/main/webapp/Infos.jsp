@@ -1,3 +1,6 @@
+<%@page import="com.fasterxml.jackson.databind.ser.AnyGetterWriter"%>
+<%@page import="java.io.PrintWriter"%>
+<%@page import="controller.CommandeDAO"%>
 <%@page import="controller.ArticleDAO"%>
 <%@page import="controller.ClientDAO"%>
 <%@page import="model.Article"%>
@@ -44,17 +47,16 @@
             </div>
             <div class="">
             <%ArrayList<String> std =  (ArrayList<String>)request.getAttribute("datacmd"); 
-                   ClientDAO cl=new ClientDAO();
-                   ArticleDAO ar=new ArticleDAO();
-                   System.out.print(std);
-			        for(String s:std){
-			        String [] line=s.split(",");
-			        }%> 
+                   ClientDAO cliDao=new ClientDAO();
+                   ArticleDAO artDao=new ArticleDAO();
+                   CommandeDAO cmdDao=new CommandeDAO();
+                   String [] row1 = std.get(0).split(",");
+                   %> 
         <div class="">
             <h1>Informations de Commande</h1>
-            <p>Numero de Commande: 123456789</p>
-            <p>Date de Commande: 2023-12-22</p>
-            <p>Etat de Commande: EnCours</p>
+            <p>Numero de Commande: <%=row1[0] %></p>
+            <p>Date de Commande: <%=cmdDao.afficherCommandeAvecId(Integer.parseInt(row1[0])).getDate_creation() %></p>
+            <p>Etat de Commande: <%=cmdDao.afficherCommandeAvecId(Integer.parseInt(row1[0])).getEtat() %></p>
         </div>
 
         <div class="">
@@ -62,15 +64,15 @@
             <table>
                 <tr>
                     <th>Nom Client :</th>
-                    <td>John Doe</td>
+                    <td><%=cliDao.afficherClientsAvecId(Integer.parseInt(row1[1])).getNom() +" "+ cliDao.afficherClientsAvecId(Integer.parseInt(row1[1])).getPrenom() %></td>
                 </tr>
                 <tr>
                     <th>Tel :</th>
-                    <td>(555) 555-5555</td>
+                    <td><%=cliDao.afficherClientsAvecId(Integer.parseInt(row1[1])).getTel() %></td>
                 </tr>
                 <tr>
                     <th>Address :</th>
-                    <td>maroc</td>
+                    <td><%=cliDao.afficherClientsAvecId(Integer.parseInt(row1[1])).getAdresse() %></td>
                 </tr>
             </table>
 
@@ -82,16 +84,25 @@
                     <th>Prix Unitaire</th>
                     <th>Total</th>
                 </tr>
+                <%
+                //System.out.print(row1[0]);
+                int somme=0;
+		        for(String s:std){
+		        String [] line=s.split(",");
+		         %>
                 <tr>
-                    <td>Article A</td>
-                    <td>2</td>
-                    <td>50.00</td>
-                    <td>100.00</td>
+                    <td><%=artDao.afficherArticleAvecId(Integer.parseInt(line[2])).getLibelle() %></td>
+                    <td><%=line[3] %></td>
+                    <td><%=artDao.afficherArticleAvecId(Integer.parseInt(line[2])).getPrix() %></td>
+                    <td><%
+                    out.print(Integer.parseInt(line[3])*artDao.afficherArticleAvecId(Integer.parseInt(line[2])).getPrix());
+                    somme+=Integer.parseInt(line[3])*artDao.afficherArticleAvecId(Integer.parseInt(line[2])).getPrix(); %></td>
                 </tr>
+                <%} %>
             </table>
 
             <div>
-                <p><strong>Total: 100.00</strong></p>
+                <p><strong>Total: <%=somme %></strong></p>
             </div>
         </div>
     </div>
