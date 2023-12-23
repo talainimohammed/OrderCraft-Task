@@ -50,25 +50,18 @@ public class CommandeServlet extends HttpServlet {
 
 			if(op.equals("add")) {
 				request.setAttribute("articles", art.afficherArticles()); 
-				RequestDispatcher rd = request.getRequestDispatcher("commande.jsp"); 
+				RequestDispatcher rd = request.getRequestDispatcher("ViewCommande/commande.jsp"); 
 				rd.forward(request, response);	
 			
 			}else if(op.equals("del")) {
 				if(cmdmanage.supprimeCommandes(Integer.parseInt(id))) {
 					request.setAttribute("datacmd", cmdmanage.afficherCommandes()); 
-					RequestDispatcher rd = request.getRequestDispatcher("list_cmd.jsp"); 
-					rd.forward(request, response);
-				}
-			}
-			else if(op.equals("etat")) {
-				if(cmdmanage.modifieretat(Integer.parseInt(id))) {
-					request.setAttribute("datacmd", cmdmanage.afficherCommandes()); 
-					RequestDispatcher rd = request.getRequestDispatcher("list_cmd.jsp"); 
+					RequestDispatcher rd = request.getRequestDispatcher("ViewCommande/list_cmd.jsp"); 
 					rd.forward(request, response);
 				}
 			}else if(op.equals("show")) {
 					request.setAttribute("datacmd", cmdmanage.afficherInfosCommande(Integer.parseInt(id))); 
-					RequestDispatcher rd = request.getRequestDispatcher("Infos.jsp"); 
+					RequestDispatcher rd = request.getRequestDispatcher("ViewCommande/Infos.jsp"); 
 					rd.forward(request, response);
 				
 			}
@@ -98,7 +91,7 @@ public class CommandeServlet extends HttpServlet {
 		}else {
 			//System.out.print(cmdmanage.afficherCommandesArticle());
 			request.setAttribute("datacmd", cmdmanage.afficherCommandes()); 
-			RequestDispatcher rd = request.getRequestDispatcher("list_cmd.jsp"); 
+			RequestDispatcher rd = request.getRequestDispatcher("ViewCommande/list_cmd.jsp"); 
 			rd.forward(request, response);
 		}
 	}
@@ -123,6 +116,14 @@ public class CommandeServlet extends HttpServlet {
 				}else {
 					out.println("Ajout Commande pas reussi");
 
+				}
+			}
+			else if(op.equals("etat")) {
+				String idCommande=request.getParameter("id");
+				if(cmdmanage.modifieretat(Integer.parseInt(idCommande),etat)!=null) {
+					request.setAttribute("datacmd", cmdmanage.afficherInfosCommande(Integer.parseInt(idCommande))); 
+					RequestDispatcher rd = request.getRequestDispatcher("ViewCommande/Infos.jsp"); 
+					rd.forward(request, response);
 				}
 			}else {
 			 out.print("Page N'exist pas");

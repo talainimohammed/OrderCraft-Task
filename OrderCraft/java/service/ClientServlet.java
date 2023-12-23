@@ -36,24 +36,24 @@ public class ClientServlet extends HttpServlet {
 		String op = request.getParameter("op");
 		if(op != null) {
 			if(op.equals("add")) {
-				RequestDispatcher rd = request.getRequestDispatcher("Client.jsp"); 
+				RequestDispatcher rd = request.getRequestDispatcher("ViewClient/Client.jsp"); 
 				rd.forward(request, response);	
 			}else if(op.equals("mod")) {
 				request.setAttribute("op", "mod"); 
 				request.setAttribute("data", mn.afficherClientsAvecId(Integer.parseInt(id))); 
-				RequestDispatcher rd = request.getRequestDispatcher("Client.jsp"); 
+				RequestDispatcher rd = request.getRequestDispatcher("ViewClient/Client.jsp"); 
 				rd.forward(request, response);	
 			}else if(op.equals("del")) {
 				if(mn.supprimeClient(Integer.parseInt(id))) {
 					request.setAttribute("data", mn.afficherClients()); 
-					RequestDispatcher rd = request.getRequestDispatcher("list_cli.jsp"); 
+					RequestDispatcher rd = request.getRequestDispatcher("ViewClient/list_cli.jsp"); 
 					rd.forward(request, response);
 				}
 			}
 			
 		}else {
 			request.setAttribute("data", mn.afficherClients()); 
-			RequestDispatcher rd = request.getRequestDispatcher("list_cli.jsp"); 
+			RequestDispatcher rd = request.getRequestDispatcher("ViewClient/list_cli.jsp"); 
 			rd.forward(request, response);
 		}
 		 

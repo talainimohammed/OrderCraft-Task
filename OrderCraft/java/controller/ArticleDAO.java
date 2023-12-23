@@ -18,6 +18,7 @@ public class ArticleDAO implements ArticleInterface{
     Article artDao=null;
 	SqlOperations sqloperation=new SqlOperations();
 
+	@Override
 	public Article ajouterArticle(Article c) {
 		 // Ajouter Article
 		String insertQuery = "INSERT INTO article(libelle, categorie, prix, stock) VALUES ('"+c.getLibelle()+"', '"+c.getCategorie()+"', '"+c.getPrix()+"', '"+c.getStock()+"')";     
@@ -25,12 +26,15 @@ public class ArticleDAO implements ArticleInterface{
 		return this.afficherArticleAvecId(idArticle);
 	}
 	
+	@Override
 	public Article modifierArticle(Article c) {
 		 // Modifier Article
 		   String insertQuery = "UPDATE article set libelle='"+c.getLibelle()+"', categorie='"+c.getCategorie()+"', prix='"+c.getPrix()+"', stock='"+c.getStock()+"' WHERE id_article="+c.getId_article();
 		   int idArticle =  sqloperation.ajouterSql(insertQuery,null);
 		   return this.afficherArticleAvecId(c.getId_article());
 	}
+	
+	@Override
 	public Article afficherArticleAvecId(int id){
 		 try {
 			String qry="select * from article where id_article="+id;
@@ -45,6 +49,8 @@ public class ArticleDAO implements ArticleInterface{
 		}
 		return artDao; 
 	}
+	
+	@Override
 	public ArrayList<Article> afficherArticles(){
 		ArrayList<Article> articlesList=new ArrayList<>();
 		 try {
@@ -61,6 +67,8 @@ public class ArticleDAO implements ArticleInterface{
 		}
 		return articlesList; 
 	}
+	
+	@Override
 	public boolean supprimeArticle(int id) {
         	String query = "DELETE FROM article WHERE id_article = "+id;
     		int check= sqloperation.ajouterSql(query,null);

@@ -12,7 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import config.DatabaseConnnect;
-import model.Client;
+import model.Article;
 import model.Commande;
 import model.CommandeInterface;
 import model.Etat;
@@ -27,6 +27,7 @@ public class CommandeDAO implements CommandeInterface{
     LocalDate date = LocalDate.now();
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     
+    @Override
 	public Commande ajouterCommande(Commande c,String listart) {
 		 try {
 	            date.format(formatter);
@@ -49,12 +50,13 @@ public class CommandeDAO implements CommandeInterface{
 	            throw new RuntimeException(e);
 	        }
 	}
+	@Override
 	public Commande afficherCommandeAvecId(int id){
 		 try {
 				String qry="select * from commande where id_commande="+id;
 				st=sqloperation.getSql(qry);
 				while (st.next()) {
-					cmd=new Commande.CommandeBuilder().setId_commande(st.getInt(1)).setId_client(st.getInt(2)).setEtat(st.getString(3)).setDate_creation(st.getDate(4).toLocalDate()).setDate_modification(st.getDate(5).toLocalDate()).build();
+					cmd=new Commande.CommandeBuilder().setId_commande(st.getInt(1)).setId_client(st.getInt(2)).setEtat(st.getString(3)).setcreated_at(st.getDate(4).toLocalDate()).setupdated_at(st.getDate(5).toLocalDate()).build();
 				}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -62,6 +64,7 @@ public class CommandeDAO implements CommandeInterface{
 		}
 		return cmd; 
 	}
+	@Override
 	public ArrayList<Commande> afficherCommandes(){
 		ArrayList<Commande> commandesList=new ArrayList<>();
 		 try {
@@ -69,7 +72,7 @@ public class CommandeDAO implements CommandeInterface{
 				st=sqloperation.getSql(qry);
 			
 			while (st.next()) {
-				cmd=new Commande.CommandeBuilder().setId_commande(st.getInt(1)).setId_client(st.getInt(2)).setEtat(st.getString(3)).setDate_creation(st.getDate(4).toLocalDate()).setDate_modification(st.getDate(5).toLocalDate()).build();
+				cmd=new Commande.CommandeBuilder().setId_commande(st.getInt(1)).setId_client(st.getInt(2)).setEtat(st.getString(3)).setcreated_at(st.getDate(4).toLocalDate()).setupdated_at(st.getDate(5).toLocalDate()).build();
 				commandesList.add(cmd);
 			}
 		} catch (SQLException e) {
@@ -79,8 +82,7 @@ public class CommandeDAO implements CommandeInterface{
 		return commandesList; 
 	}
 	
-
-	
+	@Override
 	public ArrayList<String> afficherInfosCommande(int id){
 		ArrayList<String> commandesList=new ArrayList<>();
 		 try {
@@ -97,28 +99,49 @@ public class CommandeDAO implements CommandeInterface{
 		}
 		return commandesList; 
 	}
-	public boolean modifieretat(int id) {
-		 try {
-              // Modifier Etat
-			 	String qry="select etat from commande where id_commande="+id;
-				st=sqloperation.getSql(qry);					
-				st.next(); 
-				String etat=st.getString(1);
-				Etat enumEtat=null;
-				Etat val=null;
-				if(etat.equals(enumEtat.EnAttente)) {
-					val=enumEtat.EnCours;
+		
+	@Override
+	public Commande modifieretat(int id,String etat) {
+		 // Modifier Etat
+		Commande cmd=this.afficherCommandeAvecId(id);
+		ArticleDAO artdao =new ArticleDAO();
+		ArrayList<String> listart=this.afficherInfosCommande(id);
+		//System.out.print(cmd.getEtat());
+		Etat enumEtat = null;
+		if(cmd.getEtat().equals(enumEtat.EnCours.name().toString())|| cmd.getEtat().equals(enumEtat.EnAttente.name().toString())) {
+			if(etat.equals(enumEtat.Complete.name().toString())) {
+				for(String std:listart) {
+					String[] s=std.split(",");
+					Article art=artdao.afficherArticleAvecId(Integer.parseInt(s[2]));
+					int qty=art.getStock()-Integer.parseInt(s[3]);
+					art=new Article.ArticleBuilder().setId_article(art.getId_article()).setLibelle(art.getLibelle()).setCategorie(art.getCategorie()).setPrix(art.getPrix()).setStock(qty).build();
+					//System.out.print(art);
+					artdao.modifierArticle(art);
 				}
-	            String insertQuery = "UPDATE commande set etat=? WHERE id_commande=?";
-		        statement = con.prepareCall(insertQuery);
-		        statement.setInt(1, id);
-		        statement.execute();
-              return true;
-	                
-	        } catch (SQLException e) {
-	            throw new RuntimeException(e);
-	        }
+			}
+		}
+		if(cmd.getEtat().equals(enumEtat.Complete.name().toString())) {
+			if(etat.equals(enumEtat.Annuler.name().toString())) {
+				for(String std:listart) {
+					String[] s=std.split(",");
+					Article art=artdao.afficherArticleAvecId(Integer.parseInt(s[2]));
+					int qty=art.getStock()+Integer.parseInt(s[3]);
+					art=new Article.ArticleBuilder().setId_article(art.getId_article()).setLibelle(art.getLibelle()).setCategorie(art.getCategorie()).setPrix(art.getPrix()).setStock(qty).build();
+					//System.out.print(art);
+					artdao.modifierArticle(art);
+				}
+			}
+		}
+        date.format(formatter);
+		 String insertQuery = "UPDATE commande set etat='"+etat+"',date_modification='"+date+"' WHERE id_commande="+id;
+		 int check= sqloperation.ajouterSql(insertQuery,null);
+		 if(check>0) {
+			   return this.afficherCommandeAvecId(id);
+		   }
+		  return null;
 	}
+	
+	@Override
 	public boolean supprimeCommandes(int id) {
 		//Delete from Table Commande Article
         String query = "DELETE FROM commande_article WHERE id_commande = "+id;
@@ -133,4 +156,5 @@ public class CommandeDAO implements CommandeInterface{
    	   }
 		return false;
 	}
+	
 }

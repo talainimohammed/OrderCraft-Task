@@ -12,6 +12,7 @@ import org.apache.taglibs.standard.tag.common.core.CatchTag;
 import config.DatabaseConnnect;
 import model.Client;
 import model.ClientInterface;
+import model.Commande;
 
 public class ClientDAO implements ClientInterface{
 	
@@ -21,6 +22,7 @@ public class ClientDAO implements ClientInterface{
 	Client cl=null;
 	SqlOperations sqloperation=new SqlOperations();
 
+	@Override
 	public Client ajouterClient(Client c) {
 		 // Ajouter Client
 		String insertQuery = "INSERT INTO client(nom, prenom, tel, adresse) VALUES ('"+c.getNom()+"', '"+c.getPrenom()+"', '"+c.getTel()+"', '"+c.getAdresse()+"')";
@@ -28,6 +30,7 @@ public class ClientDAO implements ClientInterface{
 		return this.afficherClientsAvecId(idClient);
 	}
 	
+	@Override
 	public Client modifierClient(Client c) {
 		 // Modifier Client
 		   String insertQuery = "UPDATE client set nom='"+c.getNom()+"', prenom='"+c.getPrenom()+"', tel='"+c.getTel()+"', adresse='"+c.getAdresse()+"' WHERE id_client="+c.getId_client()+"";
@@ -38,6 +41,7 @@ public class ClientDAO implements ClientInterface{
 		return null;
 	}
 	
+	@Override
 	public Client afficherClientsAvecId(int id){
 		 try {
 			String qry="select * from client where id_client="+id;
@@ -53,6 +57,7 @@ public class ClientDAO implements ClientInterface{
 		return cl; 
 	}
 	
+	@Override
 	public ArrayList<Client> afficherClients(){
 		ArrayList<Client> clientsList=new ArrayList<>();
 		 try {
@@ -68,8 +73,22 @@ public class ClientDAO implements ClientInterface{
 		}
 		return clientsList; 
 	}
+	
+	@Override
 	public boolean supprimeClient(int id) {
-		
+		Commande cmd=null;
+		CommandeDAO cmddao=new CommandeDAO();
+		String qry="select id_commande from commande where id_client="+id;
+		st=sqloperation.getSql(qry);
+		try {
+			while (st.next()) {
+				cmd=new Commande.CommandeBuilder().setId_commande(st.getInt(1)).build();
+				cmddao.supprimeCommandes(cmd.getId_commande());
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         String query = "DELETE FROM client WHERE id_client = "+id;
 		int check= sqloperation.ajouterSql(query,null);
 	   if(check>0) {

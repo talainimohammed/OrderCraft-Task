@@ -37,24 +37,24 @@ public class ArticleServlet extends jakarta.servlet.http.HttpServlet {
 		String op = request.getParameter("op");
 		if(op != null) {
 			if(op.equals("add")) {
-				RequestDispatcher rd = request.getRequestDispatcher("article.jsp"); 
+				RequestDispatcher rd = request.getRequestDispatcher("ViewArticle/article.jsp"); 
 				rd.forward(request, response);	
 			}else if(op.equals("mod")) {
 				request.setAttribute("op", "mod"); 
 				request.setAttribute("data", artmanage.afficherArticleAvecId(Integer.parseInt(id))); 
-				RequestDispatcher rd = request.getRequestDispatcher("article.jsp"); 
+				RequestDispatcher rd = request.getRequestDispatcher("ViewArticle/article.jsp"); 
 				rd.forward(request, response);	
 			}else if(op.equals("del")) {
 				if(artmanage.supprimeArticle(Integer.parseInt(id))) {
 					request.setAttribute("data", artmanage.afficherArticles()); 
-					RequestDispatcher rd = request.getRequestDispatcher("list_art.jsp"); 
+					RequestDispatcher rd = request.getRequestDispatcher("ViewArticle/list_art.jsp"); 
 					rd.forward(request, response);
 				}
 			}
 			
 		}else {
 			request.setAttribute("data", artmanage.afficherArticles()); 
-			RequestDispatcher rd = request.getRequestDispatcher("list_art.jsp"); 
+			RequestDispatcher rd = request.getRequestDispatcher("ViewArticle/list_art.jsp"); 
 			rd.forward(request, response);
 		}
 	}
